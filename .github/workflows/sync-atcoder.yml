@@ -49,21 +49,21 @@ jobs:
           }
           EOF
 
-      - name: Dump config for debug
-        run: |
-          echo "---- config.json ----"
-          cat ~/.procon-gardener/config.json || echo "(file not found or empty)"
-
       - name: Run archive and push
         working-directory: ${{ github.workspace }}
         run: |
-          # AtCoder 提出をローカル repo 下にどう格納するかは事前設定による
-          procon-gardener archive
-          # 差分がない場合は status=0 のまま抜けるので注意
+          # 設定ファイルを明示し、詳細ログも出力
+          procon-gardener archive \
+            --config "$HOME/.procon-gardener/config.json" \
+            --verbose
+
+          # 差分がない場合はここで終了
           if git diff --quiet; then
             echo "No changes to push."
             exit 0
           fi
+
+          # 差分あればコミット＆プッシュ
           git add .
           git commit -m "AtCoder archive: $(date -d 'yesterday' +'%Y-%m-%d')"
           git push origin HEAD:main
