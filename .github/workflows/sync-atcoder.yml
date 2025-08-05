@@ -48,6 +48,14 @@ jobs:
             }
           }
           EOF
+{
+  "atcoder": {
+    "repository_path": "${{ github.workspace }}",
+    "user_id": "${ATCODER_USER_ID}",
+    "user_email": "${ATCODER_USER_EMAIL}"
+  }
+}
+EOF
 
       - name: Run archive and push
         working-directory: ${{ github.workspace }}
