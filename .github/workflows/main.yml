@@ -1,0 +1,65 @@
+name: Sync AtCoder Archive
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 毎日00:10（JST）に実行
+    - cron: "0 15 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+
+    env:
+      ATCODER_USER_ID: ${{ secrets.ATCODER_USER_ID }}
+      ATCODER_USER_EMAIL: ${{ secrets.ATCODER_USER_EMAIL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 最新の50コミットだけ取得する
+          fetch-depth: 50
+          persist-credentials: true
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21.x"
+
+      - name: Install procon-gardener
+        run: |
+          go install github.com/togatoga/procon-gardener@latest
+          # GOPATH/bin が PATH に入るように明示
+          echo "${{ github.workspace }}/go/bin" >> $GITHUB_PATH
+
+      - name: Prepare config
+        run: |
+          mkdir -p ~/.config/procon-gardener
+          cat <<EOF > ~/.config/procon-gardener/config.json
+          {
+            "atcoder": {
+              "repository_path": "${{ github.workspace }}",
+              # 個人情報は見えないようにする
+              "user_id": "${ATCODER_USER_ID}",
+              "user_email": "${ATCODER_USER_EMAIL}"
+            }
+          }
+          EOF
+
+      - name: Run archive and push
+        working-directory: ${{ github.workspace }}
+        run: |
+          # AtCoder 提出をローカル repo 下にどう格納するかは事前設定による
+          procon-gardener archive
+          # 差分がない場合は status=0 のまま抜けるので注意
+          if git diff --quiet; then
+            echo "No changes to push."
+            exit 0
+          fi
+          git add .
+          git commit -m "AtCoder archive: $(date -d 'yesterday' +'%Y-%m-%d')"
+          git push origin HEAD:main
