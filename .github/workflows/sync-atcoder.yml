@@ -60,5 +60,5 @@ jobs:
             exit 0
           fi
           git add .
-          git commit -m "AtCoder archive: $(date +'%Y-%m-%d')"
+          git commit -m "AtCoder archive: $(date -d 'yesterday' +'%Y-%m-%d')"
           git push origin HEAD:main
