@@ -1,6 +1,7 @@
 name: Sync AtCoder Archive
 
 on:
+  workflow_dispatch:
   schedule:
     # 毎日00:10（JST）に実行
     - cron: "0 15 * * *"
