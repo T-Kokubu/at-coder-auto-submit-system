@@ -52,7 +52,7 @@ jobs:
       - name: Run archive and push
         working-directory: ${{ github.workspace }}
         run: |
-          procon-gardener archive --verbose
+          procon-gardener archive
 
           # 差分がない場合はここで終了
           if git diff --quiet; then
