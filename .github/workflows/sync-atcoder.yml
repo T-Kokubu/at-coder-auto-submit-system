@@ -39,7 +39,7 @@ jobs:
       - name: Prepare config
         run: |
           mkdir -p ~/.procon-gardener
-          cat <<-EOF > ~/.procon-gardener/config.json
+          cat <<EOF > ~/.procon-gardener/config.json
           {
             "atcoder": {
               "repository_path": "${{ github.workspace }}",
@@ -48,6 +48,11 @@ jobs:
             }
           }
           EOF
+
+      - name: Dump config for debug
+        run: |
+          echo "---- config.json ----"
+          cat ~/.procon-gardener/config.json || echo "(file not found or empty)"
 
       - name: Run archive and push
         working-directory: ${{ github.workspace }}
