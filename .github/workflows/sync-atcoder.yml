@@ -43,7 +43,6 @@ jobs:
           {
             "atcoder": {
               "repository_path": "${{ github.workspace }}",
-              # 個人情報は見えないようにする
               "user_id": "${ATCODER_USER_ID}",
               "user_email": "${ATCODER_USER_EMAIL}"
             }
