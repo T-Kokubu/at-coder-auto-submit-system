@@ -39,7 +39,7 @@ jobs:
       - name: Prepare config
         run: |
           mkdir -p ~/.procon-gardener
-          cat <<EOF > ~/.procon-gardener/config.json
+          cat <<-EOF > ~/.procon-gardener/config.json
           {
             "atcoder": {
               "repository_path": "${{ github.workspace }}",
