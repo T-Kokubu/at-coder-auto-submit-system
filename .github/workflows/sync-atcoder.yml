@@ -52,10 +52,7 @@ jobs:
       - name: Run archive and push
         working-directory: ${{ github.workspace }}
         run: |
-          # 設定ファイルを明示し、詳細ログも出力
-          procon-gardener archive \
-            --config "$HOME/.procon-gardener/config.json" \
-            --verbose
+          procon-gardener archive --verbose
 
           # 差分がない場合はここで終了
           if git diff --quiet; then
